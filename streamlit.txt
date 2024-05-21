@@ -1,0 +1,14 @@
+streamlit
+pickle
+re
+TextBlob
+stopwords
+nltk
+PollingObserver
+FileSystemEventHandler
+threading
+train_test_split
+CountVectorizer
+LogisticRegression
+load_files
+string
