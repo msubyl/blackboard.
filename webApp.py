@@ -1,9 +1,13 @@
+import time
 import streamlit as st
 import pickle
 import re
 from textblob import TextBlob
 from nltk.corpus import stopwords
 import nltk
+from watchdog.observers.polling import PollingObserver as Observer
+from watchdog.events import FileSystemEventHandler
+import threading
 
 # Ensure stopwords are downloaded
 nltk.download('stopwords')
@@ -47,6 +51,29 @@ def classify_sentiment(text):
     vectorized_text = vectorizer.transform([processed_text])
     prediction = LG_model.predict(vectorized_text)
     return 'Positive' if prediction[0] == 1 else 'Negative'
+
+# FileSystemEventHandler subclass to watch for file changes
+class FileChangeHandler(FileSystemEventHandler):
+    def on_modified(self, event):
+        if event.src_path == model_file_path or event.src_path == vectorizer_file_path:
+            st.experimental_rerun()
+
+# Function to start the file watcher
+def start_watcher():
+    event_handler = FileChangeHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='.', recursive=False)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+# Start the file watcher in a separate thread
+watcher_thread = threading.Thread(target=start_watcher, daemon=True)
+watcher_thread.start()
 
 def main():
     st.title("Sentiment Analysis")

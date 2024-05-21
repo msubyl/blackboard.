@@ -11,7 +11,7 @@ import string
 nltk.download('stopwords')
 
 # Load your dataset (replace this with your own dataset)
-reviews = load_files('blackboard12 .csv')  # Assuming the dataset is in the 'txt_sentoken' directory
+reviews = load_files('C:\Users\Asus\Desktop\MLP\blackboard dataset.csv')  # Assuming the dataset is in the 'txt_sentoken' directory
 X, y = reviews.data, reviews.target
 
 # Text preprocessing function
